@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <title>Questions & Answers</title>
+
+    <!-- Bootstrap core CSS -->
+   <link href="{{url_for('static',filename = 'bootstrap.min.css')}}" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="{{url_for('static',filename = 'theme.css')}}" rel="stylesheet">
+  
+  <style type="text/css">
+    .button {
+      border-radius: 15%;
+  ; /* Green */
+  border: none;
+  color: white;
+  padding: 16px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+}
+
+
+  .button1 {
+    background-color: white; 
+    color: black; 
+    border: 2px solid #DD00FB ;
+  }
+
+  .button1:hover {
+    background-color: #DD00FB;
+    color: white;
+  }
+
+  </style>
+
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">Questions & Answers</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="{{(url_for('index'))}}">Home</a></li>
+            <li><a href="{{(url_for('search'))}}">Search</a></li>
+            {% if not user %}
+            <li><a href="{{(url_for('login'))}}">Login</a></li>
+            <li><a href="{{(url_for('register'))}}">Register</a></li>
+            {% endif %}
+
+            {% if user  and user.admin == None and user.expert == None %}
+            <li><a href="{{(url_for('myfeed'))}}">My Feed</a></li>
+            <li><a href="{{(url_for('ask'))}}">Ask Question</a></li>
+            <li><a href="{{(url_for('myquestion'))}}">My Question</a></li>
+            {% endif %}
+
+            {% if user and user.admin == None and user.expert == 1 %}
+            <li><a href="{{(url_for('unanswered'))}}">Answer Questions</a></li>
+            {% endif %}
+
+            {% if user and user.admin == 1 %}
+            <li><a href="{{(url_for('users'))}}">User Setup</a></li>
+            {% endif %}
+
+            {% if user %}
+            <li><a href="{{(url_for('logout'))}}">Logout</a></li>
+            {% endif %}
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <div class="container theme-showcase" role="main">
+
+      <div class="page-header">
+        <h1>Answered Questions</h1>
+      </div>
+
+      <div>
+        
+        {% if size %}
+        <button><a href="{{url_for('increasing',type_ =  1)}}">Increasing Like</a></button>
+        <button style="margin-left: 40px; margin-bottom: 20px"><a href="{{url_for('increasing',type_ = 2)}}">
+        Decreasing Like</a></button>
+        {% endif %}
+      </div>
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="list-group">
+            {% for i in range(size) %}
+            <a href="{{url_for('question', question_id = answer[i*9+3])}}" class="list-group-item">
+              <h4 class="list-group-item-heading">{{ answer[i*9] }}</h4>
+              <p class="list-group-item-text">Asked by: {{answer[i*9 + 1]}}</p>
+              <p class="list-group-item-text">Answered by: {{answer[i*9 + 2]}}</p>
+
+              <br>
+              Tags:&nbsp;&nbsp;&nbsp;&nbsp;
+              <button class ="button1">{{answer[i*9 + 6]}}</button>
+              <button class ="button1">{{answer[i*9 + 7]}}</button>
+              <button class ="button1">{{answer[i*9 + 8]}}</button>
+            </a>
+
+            
+
+            <a href="{{url_for('like', question_id = answer[i*9+3])}}" style="font-size: 30px; color: #3DF318"><i class="fa fa-thumbs-up">{{answer[i*9 + 4]}}</i><a>
+            <a href="{{url_for('dislike', question_id = answer[i*9+3])}}" style="font-size: 30px; margin-left: 40px; color:#FB0000"><i class="fa fa-thumbs-down">{{answer[i*9 + 5]}}</i><a>
+            <br>
+            <br>
+            {% endfor %}
+
+          </div>
+        </div><!-- /.col-lg-12 -->
+      </div>
+
+    </div> <!-- /container -->
+
+  </body>
+  <script type="text/javascript">
+    const buttons = document.getElementsByClassName('button1');
+    
+    for(let i = 0; i < buttons.length; i++)
+      if(buttons[i].innerText === '')
+        buttons[i].style.visibility = 'hidden';
+
+  </script>
+</html>
