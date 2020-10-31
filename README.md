@@ -1,5 +1,6 @@
 # Question-And-Answer-Application
 1)install the following packages
+   <br>
    pip install flask
    pip install flask_sqlalchemy
    pip install flask_login
